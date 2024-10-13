@@ -39,6 +39,20 @@ router.get('/mostActive', async (req, res) => {
 });
 
 
+// Route to get todos by status using the query helper
+router.get('/status/:status', async (req, res) => {
+    const { status } = req.params; // Extract the status from the route parameters
+    try {
+        const todos = await Todo.find().findByStatus(status); // Call the query helper method
+        res.status(200).json({ message: `${status} todos retrieved successfully.`, todos });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'There was a server-side error!' });
+    }
+});
+
+
+
 
 // GET ALL TODOS
 router.get('/all', async (req, res) => {

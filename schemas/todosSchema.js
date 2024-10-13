@@ -30,9 +30,17 @@ todoSchema.methods = {
 
 
 // Static method
-todoSchema.statics={
+todoSchema.statics = {
     findMostActive: function () {
-        return this.find({status:'most active'});
+        return this.find({ status: 'most active' });
+    }
+};
+
+
+// Query Helper
+todoSchema.query = {
+    findByStatus: function (status) {
+        return this.find({ status });
     }
 };
 
