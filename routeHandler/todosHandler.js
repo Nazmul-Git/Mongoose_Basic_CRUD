@@ -27,6 +27,17 @@ router.get('/active', async (req, res) => {
     }
 });
 
+// GET ALL MOST ACTIVE TODOS (using Statics method)
+router.get('/mostActive', async (req, res) => {
+    try {
+        const activeTodos = await Todo.findMostActive(); // Correctly calling the Statics method
+        res.status(200).json({ message: 'Active todos retrieved successfully.', activeTodos });
+    } catch (err) {
+        console.error(err); // Log the error for debugging
+        res.status(500).json({ error: 'There was a server-side error!' });
+    }
+});
+
 
 
 // GET ALL TODOS

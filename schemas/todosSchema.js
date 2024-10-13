@@ -29,4 +29,12 @@ todoSchema.methods = {
 };
 
 
+// Static method
+todoSchema.statics={
+    findMostActive: function () {
+        return this.find({status:'most active'});
+    }
+};
+
+
 module.exports = todoSchema;
