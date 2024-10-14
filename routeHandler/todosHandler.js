@@ -2,13 +2,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const todoSchema = require('../schemas/todosSchema');
 const Todo = mongoose.model('Todo', todoSchema);
+const checkLogin = require('../middlewares/checkLogin');
 
 const router = express.Router();
 
 // GET BY CATEGORY TODOS
 router.get('/', async (req, res) => {
     try {
-        const todos = await Todo.find().byStatus('inactive').select({ date: 0 });
+        const todos = await Todo.find().byStatus('inactive').select({ date: 0 }).limit(10);
         res.status(200).json({ message: 'Todos retrieved successfully.', todos });
     } catch (err) {
         res.status(500).json({ error: 'There was a server-side error!' });
@@ -55,7 +56,9 @@ router.get('/status/:status', async (req, res) => {
 
 
 // GET ALL TODOS
-router.get('/all', async (req, res) => {
+router.get('/all', checkLogin, async (req, res) => {
+    console.log(req.username);
+    console.log(req.userId);
     try {
         const todos = await Todo.find().select({ date: 0 });
         res.status(200).json({ message: 'Todos retrieved successfully.', todos });
