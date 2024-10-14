@@ -1,8 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const dotenv= require('dotenv');
 const todosHandler = require('./routeHandler/todosHandler');
+const userHandler= require('./routeHandler/usersHandler');
 const app = express();
-
+dotenv.config();
 // Express app initialization
 app.use(express.json());
 
@@ -14,6 +16,7 @@ mongoose
 
 // Routes
 app.use('/todo', todosHandler);
+app.use('/user', userHandler);
 
 // Default error handler
 app.use((err, req, res, next) => {

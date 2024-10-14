@@ -139,14 +139,16 @@ router.delete('/', async (req, res) => {
 });
 
 // DELETE ALL TODOS
-router.delete('/all', async (req, res) => {
+router.delete('/delete/all', async (req, res) => {
     try {
         const result = await Todo.deleteMany({});
+        console.log(`Deleted count: ${result.deletedCount}`); // Log deleted count
         res.status(204).json({ message: 'All todos deleted successfully.', deletedCount: result.deletedCount });
     } catch (err) {
-        console.error(err); // Log the error for debugging
+        console.error('Error deleting todos:', err); // More detailed error logging
         res.status(500).json({ error: 'There was a server-side error!' });
     }
 });
+
 
 module.exports = router;
