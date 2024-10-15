@@ -1,15 +1,17 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const todoSchema = require('../schemas/todosSchema');
+const userSchema = require('../schemas/userSchema');
 const Todo = mongoose.model('Todo', todoSchema);
+const User = mongoose.model('User', userSchema);
 const checkLogin = require('../middlewares/checkLogin');
 
 const router = express.Router();
 
 // GET BY CATEGORY TODOS
-router.get('/', async (req, res) => {
+router.get('/category', async (req, res) => {
     try {
-        const todos = await Todo.find().byStatus('inactive').select({ date: 0 }).limit(10);
+        const todos = await Todo.find().findByStatus('active').select({ date: 0 }).limit(10);
         res.status(200).json({ message: 'Todos retrieved successfully.', todos });
     } catch (err) {
         res.status(500).json({ error: 'There was a server-side error!' });
@@ -53,14 +55,10 @@ router.get('/status/:status', async (req, res) => {
 });
 
 
-
-
 // GET ALL TODOS
-router.get('/all', checkLogin, async (req, res) => {
-    console.log(req.username);
-    console.log(req.userId);
+router.get('/', checkLogin, async (req, res) => {
     try {
-        const todos = await Todo.find().select({ date: 0 });
+        const todos = await Todo.find({}).populate('user', "name username").select({ date: 0 });
         res.status(200).json({ message: 'Todos retrieved successfully.', todos });
     } catch (err) {
         res.status(500).json({ error: 'There was a server-side error!' });
@@ -84,13 +82,21 @@ router.get('/:id', async (req, res) => {
 
 // POST A TODO
 router.post('/post-one', checkLogin, async (req, res) => {
+    const newTodo = new Todo({
+        ...req.body,
+        user: req.userId,
+    });
     try {
-        const newTodo = new Todo({
-            ...req.body,
-            user: req.userId,
-        });
 
-        await newTodo.save();
+        const todo = await newTodo.save();
+        await User.updateOne({
+            _id: req.userId,
+        },
+            {
+                $push: {
+                    todo: todo._id
+                }
+            });
         res.status(201).json({ message: 'Todo was inserted successfully.', todo: newTodo });
     } catch (err) {
         res.status(500).json({ error: 'There was a server-side error!' });

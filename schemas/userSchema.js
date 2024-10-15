@@ -22,7 +22,13 @@ const userSchema = new Schema({       // create Schema/blueprint of types of dat
     date: {
         type: Date,
         default: Date.now // Correctly reference Date.now
-    }
+    },
+    todo: [
+        {
+            type : mongoose.Types.ObjectId,
+            ref : "Todo"
+        }
+    ]
 });
 
 module.exports = userSchema;

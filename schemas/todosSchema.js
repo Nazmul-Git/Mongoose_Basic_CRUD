@@ -33,6 +33,12 @@ todoSchema.methods = {
     }
 };
 
+todoSchema.methods={
+    getFormattedDate: function(){
+        return this.date ? this.date.toISOString().split('T')[0] : null;
+    }
+}
+
 
 // Static method
 todoSchema.statics = {

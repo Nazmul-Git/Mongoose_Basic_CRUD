@@ -67,7 +67,7 @@ router.post('/login', async (req, res) => {
 
 router.get('/all-user', async (req, res) => {
     try {
-        const users = await User.find({});
+        const users = await User.find({}).populate("todo");
         res.status(200).json({ "message": users });
     } catch (err) {
         res.status(500).json({ "error": err.message });
