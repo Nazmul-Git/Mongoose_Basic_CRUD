@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { use } = require('../routeHandler/todosHandler');
 const { Schema } = mongoose; //If use distructuring. Otherwise use mongoose.Schema({...}). mongoose contain Schema class
 
 const todoSchema = new Schema({       // create Schema/blueprint of types of data..
@@ -17,6 +18,10 @@ const todoSchema = new Schema({       // create Schema/blueprint of types of dat
     date: {
         type: Date,
         default: Date.now // Correctly reference Date.now
+    },
+    user:{
+        type: mongoose.Types.ObjectId,
+        ref: "User"
     }
 });
 

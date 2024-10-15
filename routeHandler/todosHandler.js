@@ -83,9 +83,13 @@ router.get('/:id', async (req, res) => {
 
 
 // POST A TODO
-router.post('/', async (req, res) => {
-    const newTodo = new Todo(req.body);
+router.post('/post-one', checkLogin, async (req, res) => {
     try {
+        const newTodo = new Todo({
+            ...req.body,
+            user: req.userId,
+        });
+
         await newTodo.save();
         res.status(201).json({ message: 'Todo was inserted successfully.', todo: newTodo });
     } catch (err) {
@@ -94,7 +98,7 @@ router.post('/', async (req, res) => {
 });
 
 // POST MULTIPLE TODOS
-router.post('/all', async (req, res) => {
+router.post('/post-many', async (req, res) => {
     try {
         const todos = await Todo.insertMany(req.body);
         res.status(201).json({ message: 'Multiple Todos were inserted successfully.', todos });
@@ -152,6 +156,7 @@ router.delete('/delete/all', async (req, res) => {
         res.status(500).json({ error: 'There was a server-side error!' });
     }
 });
+
 
 
 module.exports = router;

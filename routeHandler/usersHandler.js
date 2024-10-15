@@ -36,7 +36,7 @@ router.post('/login', async (req, res) => {
                 const token = jwt.sign({
                     username: user.username, // Directly access user.username
                     userId: user._id // Directly access user._id
-                }, process.env.JWT_SECRET, {expiresIn: '1h'}); 
+                }, process.env.JWT_SECRET, { expiresIn: '1h' });
                 // Provide Token as a comment, the purpose of understanderd for beginers. Also check token in https://jwt.io/ website.
 
                 //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik5hem11bCBIYXNhbiBTdW5ueSIsInVzZXJJZCI6IjY3MGQ0MjE3Y2RmZjY4YjlmNDI4Mjg1NyIsImlhdCI6MTcyODkzMjQ3NywiZXhwIjoxNzI4OTM2MDc3fQ.3zeuIVThP7JmfbKdw0MpKA4yzSj1N6-jUo1dY8WNvLU  
@@ -64,5 +64,14 @@ router.post('/login', async (req, res) => {
         res.status(500).json({ "error": err.message });
     }
 });
+
+router.get('/all-user', async (req, res) => {
+    try {
+        const users = await User.find({});
+        res.status(200).json({ "message": users });
+    } catch (err) {
+        res.status(500).json({ "error": err.message });
+    }
+})
 
 module.exports = router;
